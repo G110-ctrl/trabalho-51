@@ -1,0 +1,1 @@
+void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel);

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "cores.h"
+#include "tabuleiro.h"
 
 void preenche(char **pecas) {
   
@@ -63,6 +64,7 @@ void imprimir_disponivel(char *disponivel) {
         break;      
     } 
   }
+  printf("\n");
   return;
 }
 
@@ -91,14 +93,6 @@ void pecas_disponiveis(char **pecas, char *disponivel) {
   return;
 }
 
-void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel) {
-
-  printf("Peças disponiveis: ");
-  imprimir_disponivel(disponivel);
-  
-  return;
-}
-
 void usuario(void) {
 
 // Inserir usuarios 
@@ -110,12 +104,19 @@ void usuario(void) {
   char *disponivel;
 
   printf("Quantidade de jogadores: ");
-  scanf("%d", &num_jog);
+  do {
+    scanf("%d", &num_jog);
+    if(num_jog>=19 || num_jog<=0) {
+      vermelho();
+      printf("Quantidade de jogadores invalida. Por favor, insira uma quantidade válida: ");
+      padrao();
+    }
+  } while(num_jog>=19 || num_jog<=0);
 
   jogadores = (char **) malloc(sizeof(char *) * num_jog);
   if(jogadores == NULL) {
     vermelho();
-    printf("Não foi possével alocar memoria!");
+    printf("Nao foi possével alocar memoria!");
     padrao();
     exit(1);
   }
@@ -123,7 +124,7 @@ void usuario(void) {
     jogadores[i] = (char *) malloc(sizeof(char) * 100);
     if(jogadores[i] == NULL) {
       vermelho();
-      printf("Não foi possével alocar memoria!");
+      printf("Nao foi possivel alocar memoria!");
       padrao();
       exit(1);      
     }
@@ -131,7 +132,7 @@ void usuario(void) {
   pecas = (char **) malloc(sizeof(char *) * 6);
   if(pecas == NULL) {
     vermelho();
-    printf("Não foi possével alocar memoria!");
+    printf("Nao foi possivel alocar memoria!");
     padrao();
     exit(1);
   }
@@ -139,7 +140,7 @@ void usuario(void) {
     pecas[i] = (char *) malloc(sizeof(char) * 36);
     if(pecas[i] == NULL) {
       vermelho();
-      printf("Não foi possével alocar memoria!");
+      printf("Nao foi possivel alocar memoria!");
       padrao();
       exit(1);
     }
@@ -157,7 +158,7 @@ void usuario(void) {
     jogadores[i] = (char *) realloc(jogadores[i] ,sizeof(char) * (num_letra + 1)); // Conta o '\0'
     if(jogadores[i] == NULL) {
       vermelho();
-      printf("Não foi possével alocar memoria!");
+      printf("Nao foi possivel alocar memoria!");
       padrao();
       exit(1);
     }
@@ -166,18 +167,18 @@ void usuario(void) {
   disponivel = (char *) malloc(sizeof(char) * 12);
   if(disponivel == NULL) {
     vermelho();
-    printf("Não foi possével alocar memoria!");
+    printf("Nao foi possivel alocar memoria!");
     padrao();
     exit(1);
   }
 
   preenche(pecas);  // preenche a matriz com a peças do jogo
-  for(int i = 0; i < 6; i++) {
-    for(int j = 0; j < 36; j += 2) {
-      printf("%c%c ", pecas[i][j], pecas[i][j+1]);
-    }
-    printf("\n");
-  }
+  //for(int i = 0; i < 6; i++) {
+    //for(int j = 0; j < 36; j += 2) {
+      //printf("%c%c ", pecas[i][j], pecas[i][j+1]);
+    //}
+    //printf("\n");
+  //}
 
   pecas_disponiveis(pecas, disponivel);
   quadro_pecas(pecas, tabuleiro, disponivel);
