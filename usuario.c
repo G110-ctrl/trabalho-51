@@ -7,7 +7,7 @@
 void preenche(char **pecas) {
   
   unsigned int letra = 65;      // Caracteres letras 
-  unsigned int numero = 49;     // Caracteres numero (apartir de 1) 
+  unsigned int numero = 49;     // Caracteres numero (a partir de 1) 
   int i, j;
   int k = 0;
   
@@ -171,7 +171,7 @@ void usuario(void) {
 
   preenche(pecas);  // preenche a matriz com a peças do jogo
   pecas_disponiveis(pecas, disponivel);
-  quadro_pecas(pecas, tabuleiro, disponivel, inicial);
+  quadro_pecas(pecas, tabuleiro, disponivel, jogadores, num_jog);
   inicial = 1;
 
   //printf("\n");
