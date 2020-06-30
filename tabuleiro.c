@@ -9,7 +9,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, int inicial)
   static int linha_superior;
   static int coluna;
   static int coluna_esquerda;
-  int i, j;
+  int i, j;     // Contadores 
 
   if(inicial == 0) {
     linha = 1;
@@ -29,8 +29,8 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, int inicial)
       padrao();
       exit(1);
     }
-    for(int i = 0; i < coluna; i++) {
-      tabuleiro[i] = (char *) realloc(tabuleiro, sizeof(char) * coluna);
+    for(i = 0; i < linha; i++) {
+      tabuleiro[i] = (char *) realloc(tabuleiro[i], sizeof(char) * coluna);
       if(tabuleiro[i] == NULL) {
         vermelho();
         printf("Não foi possivel adicinar colunas no tabuleiro\n");
@@ -65,18 +65,18 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, int inicial)
   scanf("%d %d", &pos1, &pos2);
 
   tabuleiro[pos1][pos2] = jogada[0];
-  tabuleiro[pos1][pos2 + 1] = jogada[1];
+  tabuleiro[pos1][pos2 + 1] = jogada[1]; 
 
   int flag = 0;  
   // Verificação na linha superior
-  for(i = 0; i < coluna; i++) {
-    if(tabuleiro[0][i] != ' ') {    // Se a linha mais superior não estiver vazia
+  for(i = 0; i < coluna; i++) { 
+    if(tabuleiro[0][i] != ' ') { // Se a linha mais superior não estiver vazia
       linha_superior += - 1;
       flag = 1;
       break;
     }
   }
-
+ 
   if(flag) {
     linha += 1;     // Aumenta a quantidade de linhas 
     tabuleiro = (char **) realloc(tabuleiro, sizeof(char *) * linha);
@@ -86,8 +86,9 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, int inicial)
       padrao();
       exit(1);
     }
-    tabuleiro[linha-1] = (char *) realloc(tabuleiro, sizeof(char ) * coluna);
-    if(tabuleiro[linha-1] == NULL) {
+    tabuleiro[linha - 1] = NULL;
+    tabuleiro[linha - 1] = (char *) realloc(tabuleiro[linha - 1], sizeof(char ) * coluna);
+    if(tabuleiro[linha - 1] == NULL) {
       vermelho();
       printf("Não foi possivel adicinar colunas no tabuleiro\n");
       padrao();
@@ -101,9 +102,9 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, int inicial)
     
     // Coloca as peças uma posição abaixo na matriz tabuleiro 
     int copia = linha - 2;
-    for(i = 0; i < (linha - 2); i++) {
+    for(i = 0; i < (linha - 1); i++) {
       for(j = 0; j < coluna; j += 2) {
-        if(tabuleiro[copia][j] != ' ') {
+        if(tabuleiro[copia][j] != ' ') { 
           tabuleiro[copia + 1][j] = tabuleiro[copia][j];
           tabuleiro[copia + 1][j + 1] = tabuleiro[copia][j + 1];
           tabuleiro[copia][j] = ' ';
@@ -113,6 +114,45 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, int inicial)
       copia += -1;
     }
   }
+
+  // Verifica a coluna mais a esquerda 
+  flag = 0;
+  for(i = 0; i < linha; i++) {
+    if(tabuleiro[i][0] != ' ') {    // Se a coluna esquerda não estiver vazia
+      coluna_esquerda += - 1;
+      flag = 1;
+      break;
+    }
+  }
+  
+  if(flag) {
+    coluna += 2;
+    for(i = 0; i < linha; i++) {
+      tabuleiro[i] = (char *) realloc(tabuleiro[i], sizeof(char ) * coluna);
+      if(tabuleiro[i] == NULL) {
+        vermelho();
+        printf("Não foi possivel adicinar colunas no tabuleiro\n");
+        padrao();
+        exit(1);
+      }
+      // Inicializa as colunas alocadas
+      tabuleiro[i][coluna - 1] = ' ';
+      tabuleiro[i][coluna - 2] = ' ';
+    }
+    // Movimenta todas as peças para a direita do tabuleiro
+    int copia = coluna - 3;
+    for(i = 0; i < (linha - 1); i++) {
+      for(j = 0; j < coluna; j += 2) {
+        if(tabuleiro[copia][j] != ' ') {
+          tabuleiro[copia][j + 2] = tabuleiro[copia][j];
+          tabuleiro[copia][j + 3] = tabuleiro[copia][j + 1];
+          tabuleiro[copia][j] = ' ';
+          tabuleiro[copia][j + 1] = ' ';
+        }
+      }
+      copia += 1;
+    }
+  }  
 
   return;
 }
