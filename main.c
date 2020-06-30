@@ -1,6 +1,5 @@
 #include <stdio.h>
-#include "usuario.h"
-#include "cores.h"
+#include "biblioteca.h"
 
 int main(){
   

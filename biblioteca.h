@@ -1,0 +1,13 @@
+void padrao(void);
+void vermelho(void);
+void verde(void);
+void roxo(void);
+void marinho(void);
+void amarelo(void);
+void azul(void);
+void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, int inicial);
+void jogada(char *disponivel);
+void preenche(char **pecas);
+void imprimir_disponivel(char *disponivel);
+void pecas_disponiveis(char **pecas, char *disponivel);
+void usuario(void);

@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "cores.h"
-#include "tabuleiro.h"
+#include "biblioteca.h"
 
 void preenche(char **pecas) {
   
@@ -104,19 +103,15 @@ void usuario(void) {
   char *disponivel;
 
   printf("Quantidade de jogadores: ");
-  do {
-    scanf("%d", &num_jog);
-    if(num_jog>=19 || num_jog<=0) {
-      vermelho();
-      printf("Quantidade de jogadores invalida. Por favor, insira uma quantidade válida: ");
-      padrao();
-    }
-  } while(num_jog>=19 || num_jog<=0);
+  while (scanf("%d", &num_jog) == 0 || num_jog <= 0 || num_jog >= 19) {
+    printf("Opcao invalida. Digite novamente: ");
+    setbuf(stdin, NULL);
+  }
 
   jogadores = (char **) malloc(sizeof(char *) * num_jog);
   if(jogadores == NULL) {
     vermelho();
-    printf("Nao foi possével alocar memoria!");
+    printf("Nao foi possivel alocar memoria!");
     padrao();
     exit(1);
   }
@@ -172,16 +167,12 @@ void usuario(void) {
     exit(1);
   }
 
-  preenche(pecas);  // preenche a matriz com a peças do jogo
-  //for(int i = 0; i < 6; i++) {
-    //for(int j = 0; j < 36; j += 2) {
-      //printf("%c%c ", pecas[i][j], pecas[i][j+1]);
-    //}
-    //printf("\n");
-  //}
+  int inicial = 0;
 
+  preenche(pecas);  // preenche a matriz com a peças do jogo
   pecas_disponiveis(pecas, disponivel);
-  quadro_pecas(pecas, tabuleiro, disponivel);
+  quadro_pecas(pecas, tabuleiro, disponivel, inicial);
+  inicial = 1;
 
   //printf("\n");
   //for(int i = 0; i < 12; i += 2)
