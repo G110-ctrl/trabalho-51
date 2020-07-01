@@ -39,8 +39,6 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
     exit(1);
   }
 
-  //imprimir_disponivel(disponivel);
-
   char jogada[4];
   int pos1, pos2;
   int existe = 0;
@@ -55,7 +53,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
   printf("\n");
   existe = 0;
   printf("Escolha a peça desejada: ");
-  do {                      // Verifica se a peça existe
+  do {        // Verifica se a peça existe
     setbuf(stdin, NULL);
     fgets(jogada, 4, stdin);  
     jogada[strlen(jogada) - 1] = '\0';   // Retira o caractere \n
@@ -74,8 +72,11 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
   printf("Coluna que deseja jogar: ");
   scanf("%d", &pos2);
 
+  // Relaciona as posições impressas com as posições da matrzi tabuleiro
+
   i = ref_linha + pos1;
-  j = ref_coluna + pos2; 
+  j = ref_coluna + pos2;
+  j = 2 * j; 
 
   tabuleiro[i][j] = jogada[0];
   tabuleiro[i][j + 1] = jogada[1];
@@ -181,7 +182,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
     if(tabuleiro[i][0] != ' ') {    // Se a coluna esquerda não estiver vazia
       //coluna_esquerda += - 1;
       linha_superior += - 1;
-      ref_coluna += 2;
+      ref_coluna += 1;
       flag = 1;
       break;
     }

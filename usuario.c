@@ -2,7 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 #include "biblioteca.h"
+
+int is_alpha(char *s) {     // Verifica numeros e letras
+  
+  while(*s) {
+    if(isalpha(*s)) {
+      return 1;
+    }    
+    else {
+      s++;
+    }      
+  }
+  return 0; 
+}
 
 void preenche(char **pecas) {
   
@@ -96,17 +110,43 @@ void usuario(void) {
 
 // Inserir usuarios 
 
-  int num_jog;
+  int num_jog = 0;
+  char *quant_jog;
   char **jogadores;
   char **tabuleiro;
   char **pecas;
   char *disponivel;
 
-  printf("Quantidade de jogadores: ");
-  while (scanf("%d", &num_jog) == 0 || num_jog <= 0 || num_jog >= 19) {
-    printf("Opcao invalida. Digite novamente: ");
-    setbuf(stdin, NULL);
+  quant_jog = (char *) malloc(sizeof(char) * 100);
+  if(quant_jog == NULL) {
+    vermelho();
+    printf("Nao foi possivel alocar memoria\n");
+    padrao();
+    exit(1);
   }
+
+  printf("Quantidade de jogadores: ");
+  
+  do {
+    scanf("%s", quant_jog);
+    if(is_alpha(quant_jog) == 1) {
+      vermelho();
+      printf("Voce nao digitou um numero !!\n");
+      printf("Digite o valor corretamente: ");
+      padrao();      
+    }
+    else {
+      num_jog = atoi(quant_jog);
+      if(num_jog < 1 || num_jog > 18) {
+        vermelho();
+        printf("Quantidade de jogadores invalida, digite novamente: ");
+        padrao();      
+      }
+    }
+  } while((is_alpha(quant_jog) == 1) || (num_jog < 1 || num_jog > 18));
+
+  num_jog = atoi(quant_jog);
+  free(quant_jog);    
 
   jogadores = (char **) malloc(sizeof(char *) * num_jog);
   if(jogadores == NULL) {
@@ -141,11 +181,11 @@ void usuario(void) {
     }
   }
 
-  printf("Digite o nome dos jogadores\n");
-
   int num_letra;
   for(int i = 0; i < num_jog; i++) {
-    printf("jogador #%d: ", i + 1);
+    verde();
+    printf("Nome do jogador #%d: ", i + 1);
+    padrao();
     setbuf(stdin, NULL);
     fgets(jogadores[i], 100, stdin);
     num_letra = strlen(jogadores[i]);
@@ -158,6 +198,25 @@ void usuario(void) {
       exit(1);
     }
   }
+
+  verde();
+  printf("Cheat mode\n");
+  padrao();
+  printf("1 - Sim\n");
+  printf("2 - Não\n");
+  verde();
+  printf("Confirmacao: ");
+  padrao();
+
+  int mode;
+  do {
+    scanf("%d", &mode);
+    if(mode != 1 && mode != 2) {
+      vermelho();
+      printf("Valor invalido, digite novamente: ");
+      padrao();      
+    }
+  } while(mode != 1 && mode != 2);
 
   disponivel = (char *) malloc(sizeof(char) * 12);
   if(disponivel == NULL) {
@@ -173,10 +232,6 @@ void usuario(void) {
   pecas_disponiveis(pecas, disponivel);
   quadro_pecas(pecas, tabuleiro, disponivel, jogadores, num_jog);
   inicial = 1;
-
-  //printf("\n");
-  //for(int i = 0; i < 12; i += 2)
-    //printf("%c%c ", disponivel[i], disponivel[i+1]);
   
   free(disponivel);
   for(int i = 0; i < num_jog; i++) {
