@@ -1,7 +1,7 @@
 #include<stdio.h>
 
 // Altera a cor do texto para a padrao
-void padrao(){
+void padrao(void) {
     printf("\033[0m");
 }
 
@@ -31,4 +31,8 @@ void roxo(){
 
 void marinho(){
     printf("\033[1;96m");
+}
+
+void negrito(void) {
+    printf("\033[1;37m");
 }

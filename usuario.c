@@ -41,9 +41,9 @@ void preenche(char **pecas) {
   return;
 }
  
-void imprimir_disponivel(char *disponivel) {
+void imprimir_disponivel(char *disponivel, int quant) {
 
-  for(int i = 0; i < 12; i += 2) {
+  for(int i = 0; i < quant; i += 2) {
     switch(disponivel[i+1]) {
       case '1': 
         verde();
@@ -99,7 +99,10 @@ void pecas_disponiveis(char **pecas, char *disponivel) {
 
     if(pecas[linha][coluna] != ' ') {
       disponivel[i] = pecas[linha][coluna];
-      disponivel[i+1] = pecas[linha][coluna+1];
+      disponivel[i + 1] = pecas[linha][coluna + 1];
+    }
+    else {
+      i += -2;    // Decrementa i para procura outra posição
     }
     coluna = rand() % 36;
   }
@@ -186,10 +189,13 @@ void usuario(void) {
     verde();
     printf("Nome do jogador #%d: ", i + 1);
     padrao();
+
     setbuf(stdin, NULL);
     fgets(jogadores[i], 100, stdin);
+    
     num_letra = strlen(jogadores[i]);
     jogadores[i][strlen(jogadores[i]) - 1] = '\0';
+
     jogadores[i] = (char *) realloc(jogadores[i] ,sizeof(char) * (num_letra + 1)); // Conta o '\0'
     if(jogadores[i] == NULL) {
       vermelho();
@@ -226,12 +232,8 @@ void usuario(void) {
     exit(1);
   }
 
-  int inicial = 0;
-
   preenche(pecas);  // preenche a matriz com a peças do jogo
-  pecas_disponiveis(pecas, disponivel);
-  quadro_pecas(pecas, tabuleiro, disponivel, jogadores, num_jog);
-  inicial = 1;
+  quadro_pecas(pecas, tabuleiro, disponivel, jogadores, num_jog, mode);
   
   free(disponivel);
   for(int i = 0; i < num_jog; i++) {
