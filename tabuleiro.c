@@ -1,11 +1,182 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "biblioteca.h"
 
-void imprimir_tabuleiro(char **tabuleiro, int linha, int coluna, ) {
+void imprimir_tabuleiro(char **tabuleiro, int linha, int coluna, int linha_superior, int coluna_esquerda) {
 
+  for(int i = 0; i < coluna; i += 2) {
+    if(linha_superior < 0) {
+      printf("   %d", linha_superior);
+    }
+    else {
+      printf("    %d", linha_superior);
+    } 
+    
+    linha_superior++;
+  }
+  printf("\n");
 
+  for(int i = 0; i < linha; i++) {
+    if(coluna_esquerda < 0) {
+      printf("%d ", coluna_esquerda);
+    }
+    else {
+      printf(" %d ", coluna_esquerda);
+    }    
+    for(int j = 0; j < coluna; j += 2) {
+      switch(tabuleiro[i][j + 1]) {
+        case '1': 
+          printf("|");
+          verde();
+          printf("%c%c", tabuleiro[i][j], tabuleiro[i][j + 1]);
+          padrao();
+          printf("| ");
+          break; 
+        case '2': 
+          printf("|");
+          vermelho();
+          printf("%c%c", tabuleiro[i][j], tabuleiro[i][j + 1]); 
+          padrao();
+          printf("| ");
+          break;
+        case '3':
+          printf("|");
+          amarelo();
+          printf("%c%c", tabuleiro[i][j], tabuleiro[i][j + 1]); 
+          padrao();
+          printf("| ");
+          break;
+        case '4':
+          printf("|");
+          azul();
+          printf("%c%c", tabuleiro[i][j], tabuleiro[i][j + 1]); 
+          padrao();
+          printf("| ");
+          break;
+        case '5': 
+          printf("|");
+          roxo();
+          printf("%c%c", tabuleiro[i][j], tabuleiro[i][j + 1]); 
+          padrao();
+          printf("| ");
+          break;
+        case '6':
+          printf("|");
+          marinho();
+          printf("%c%c", tabuleiro[i][j], tabuleiro[i][j + 1]); 
+          padrao();
+          printf("| ");
+          break;
+        default: 
+          printf("|%c%c| ", tabuleiro[i][j], tabuleiro[i][j + 1]); 
+      }      
+    }
+    printf("\n");
+    coluna_esquerda++;
+  } 
+  return;
+}
+
+int opcoes(int mode) {
+
+  int flag = 0;
+  int seleciona;
+
+  verde();
+  printf("Opções:\n");
+  padrao();
+  printf("1 - Jogar |");
+  
+  if(mode == 1) {
+    printf(" 2 - Trocar |");
+    printf(" 3 - Passar\n");
+  }
+  else {
+    printf(" 2 - Passar\n");
+  }
+
+  verde();
+  printf("Qual a opção desejada: ");
+  padrao();
+
+  do {
+    flag = 0;
+    scanf("%d", &seleciona);
+    if(mode == 1) {
+      if(seleciona < 1 || seleciona > 3) {
+        vermelho();
+        printf("Valor invalido, digite novamente: ");
+        padrao();
+        flag = 1;
+      }
+    } 
+    else {
+      if(seleciona != 1 && seleciona != 2) {
+        vermelho();
+        printf("Valor invalido, digite novamente: ");
+        padrao();
+        flag = 1;
+      }
+    }
+  } while(flag == 1);
+  
+  return seleciona;
+}
+
+void cheat_mode(char **pecas, char *disponivel, int quant_disponivel) {
+
+  char jogada[10];
+  int existe = 0;
+  int i, j;
+
+  verde();
+  printf("Qual peça deseja trocar: ");
+  padrao();
+  do {
+    setbuf(stdin, NULL);  
+    fgets(jogada, 10, stdin);
+
+    for(i = 0; i < quant_disponivel; i += 2) {
+      if((jogada[0] == disponivel[i]) && (jogada[1] == disponivel[i + 1])) {
+        existe = 1;
+        break;
+      }      
+    }
+    if(!existe) {
+      vermelho();
+      printf("A peça que deseja trocar não existe, escolha novamente: ");
+      padrao();
+    }
+  } while(!existe);
+
+  // Sortei de uma nova peça
+
+  int linha;
+  int coluna;
+
+  srand(time(NULL));
+  coluna = rand() % 36;
+
+  for(j = 0; j < 2; j += 2) {    
+    while(coluna % 2 != 0) {
+      coluna = rand() % 36;      
+    }
+
+    linha = rand() % 6;
+
+    if(pecas[linha][coluna] != ' ') {
+      disponivel[i] = pecas[linha][coluna];
+      disponivel[i + 1] = pecas[linha][coluna + 1];
+    }
+    else {
+      i += -2;    // Decrementa i para procura outra posição
+    }
+    coluna = rand() % 36;
+  }
+
+  return;
 }
 
 void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogadores, int num_jog, int mode) {
@@ -15,13 +186,6 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
   int coluna = 2;
   int coluna_esquerda = 0;
   int i, j;         // Contadores 
-
-  // Tabuleiro apresentado no inicio do jogo 
-  printf("   0\n");
-  printf("0 ");    
-  printf("|_|");    
-  printf(" 0\n");
-  printf("   0\n"); 
 
   // Aloca a primeiro linha e as duas colunas iniciais 
   tabuleiro = NULL;
@@ -40,6 +204,8 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
     padrao();
     exit(1);
   }
+  tabuleiro[0][0] = ' ';
+  tabuleiro[0][1] = ' ';
 
   char jogada[10];      // Armazena a peça digitada pelo usuario
   int pos1, pos2;       // Posição do tabuleiro impresso
@@ -51,59 +217,38 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
   int seleciona = 0;
   int flag = 0;
   
-  do {
-    printf("------------------------\n");
-    printf("jogada de %s\n", jogadores[quant_jog]);
-    quant_jog++;
+  do {    
     if(quant_jog == num_jog) {
       quant_jog = 0;
     }
     pecas_disponiveis(pecas, disponivel); 
+    if(quant_disponivel != 0) {
+      imprimir_tabuleiro(tabuleiro, linha, coluna, linha_superior, coluna_esquerda);
+    }
     quant_disponivel = 12;
-
     do {
+      printf("------------------------\n");
+      printf("jogada de %s\n", jogadores[quant_jog]);
       negrito();
       printf("Pecas disponiveis: ");
       padrao();
       imprimir_disponivel(disponivel, quant_disponivel);
 
-      verde();
-      printf("Opções:\n");
-      padrao();
-      printf("1 - Jogar |");
-      
-      if(mode == 1) {
-        printf(" 2 - Trocar |");
-        printf(" 3 - Passar\n");
-      }
-      else {
-        printf(" 2 - Passar\n");
-      }
+      seleciona = opcoes(mode);   // Opções selecionadas pelo jogador da rodada atual
 
-      verde();
-      printf("Qual a opção desejada: ");
-      padrao();
-
-      do {
-        flag = 0;
-        scanf("%d", &seleciona);
-        if(mode == 1) {
-          if(seleciona < 1 || seleciona > 3) {
-            vermelho();
-            printf("Valor invalido, digite novamente: ");
-            padrao();
-            flag = 1;
-          }
-        } 
-        else {
-          if(seleciona != 1 && seleciona != 2) {
-            vermelho();
-            printf("Valor invalido, digite novamente: ");
-            padrao();
-            flag = 1;
-          }
-        }
-      } while(flag == 1);
+      if(mode == 1 && seleciona == 2) {   // Troca das peças
+        do {
+          cheat_mode(pecas, disponivel, quant_disponivel);
+          imprimir_tabuleiro(tabuleiro, linha, coluna, linha_superior, coluna_esquerda);
+          printf("------------------------\n");
+          printf("jogada de %s\n", jogadores[quant_jog]);        
+          negrito();
+          printf("Pecas disponiveis: ");
+          padrao();
+          imprimir_disponivel(disponivel, quant_disponivel);
+          seleciona = opcoes(mode);   
+        } while(seleciona == 2);     
+      }
 
       if(mode == 1 && seleciona == 3) {   // Passa a vez para o proximo adversario
         break;
@@ -133,20 +278,28 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
         }
       } while(!existe);
       
-      negrito();
-      printf("Linha que deseja jogar: ");
-      padrao();
-      scanf("%d", &pos1);
-      negrito();
-      printf("Coluna que deseja jogar: ");
-      padrao();
-      scanf("%d", &pos2);
+      do {
+        negrito();
+        printf("Linha que deseja jogar: ");
+        padrao();
+        scanf("%d", &pos1);
+        negrito();
+        printf("Coluna que deseja jogar: ");
+        padrao();
+        scanf("%d", &pos2);
 
-      // Relaciona as posições impressas com as posições da matrzi tabuleiro
+        // Relaciona as posições impressas com as posições da matrzi tabuleiro
 
-      i = ref_linha + pos1;
-      j = ref_coluna + pos2;
-      j = 2 * j; 
+        i = ref_linha + pos1;
+        j = ref_coluna + pos2;
+        j = 2 * j; 
+
+        if(tabuleiro[i][j] != ' ') {
+          vermelho();
+          printf("Posição já preenchida, insira novamente\n");
+          padrao();
+        }
+      } while(tabuleiro[i][j] != ' ');
 
       tabuleiro[i][j] = jogada[0];
       tabuleiro[i][j + 1] = jogada[1];
@@ -325,28 +478,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
       }
 
       // Imprimir tabuleiro
-      int superior = linha_superior;
-      int esquerda = coluna_esquerda;
-
-      for(j = 0; j < coluna; j += 2) {
-        printf("    %d", superior);
-        superior++;
-      }
-      printf("\n");
-
-      for(i = 0; i < linha; i++) {
-        if(esquerda < 0) {
-          printf("%d ", esquerda);
-        }
-        else {
-          printf(" %d ", esquerda);
-        }    
-        for(j = 0; j < coluna; j += 2) {
-          printf("|%c%c| ", tabuleiro[i][j], tabuleiro[i][j + 1]); 
-        }
-        printf("\n");
-        esquerda++;
-      } 
+      imprimir_tabuleiro(tabuleiro, linha, coluna, linha_superior,  coluna_esquerda);
 
       if(quant_disponivel == 0) {
         vermelho();
@@ -354,6 +486,9 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
         padrao();
       }
     } while(quant_disponivel > 0);
+    
+    quant_jog++; // proximo jogador
+    
   } while(quant_pecas > 0);
 
   return;

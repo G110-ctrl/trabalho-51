@@ -44,7 +44,7 @@ void preenche(char **pecas) {
 void imprimir_disponivel(char *disponivel, int quant) {
 
   for(int i = 0; i < quant; i += 2) {
-    switch(disponivel[i+1]) {
+    switch(disponivel[i + 1]) {
       case '1': 
         verde();
         printf("%c%c ", disponivel[i], disponivel[i+1]);
