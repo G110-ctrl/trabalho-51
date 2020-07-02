@@ -81,9 +81,18 @@ void imprimir_tabuleiro(char **tabuleiro, int linha, int coluna, int linha_super
 
 int opcoes(int mode) {
 
-  int flag = 0;
+  int flag;
   int seleciona;
+  char *entrada;
 
+  entrada = (char *) malloc(sizeof(char) * 100);
+  if(entrada == NULL) {
+    vermelho();
+    printf("Não foi possivel alocar memoria\n");
+    padrao();
+    exit(1);
+  }
+ 
   verde();
   printf("Opções:\n");
   padrao();
@@ -103,25 +112,36 @@ int opcoes(int mode) {
 
   do {
     flag = 0;
-    scanf("%d", &seleciona);
-    if(mode == 1) {
-      if(seleciona < 1 || seleciona > 3) {
-        vermelho();
-        printf("Valor invalido, digite novamente: ");
-        padrao();
-        flag = 1;
-      }
-    } 
+    scanf("%s", entrada);
+    if(is_alpha(entrada) == 1) {
+      vermelho();
+      printf("Voce nao digitou um numero !!\n");
+      printf("Digite o valor corretamente: ");
+      padrao();      
+    }
     else {
-      if(seleciona != 1 && seleciona != 2) {
-        vermelho();
-        printf("Valor invalido, digite novamente: ");
-        padrao();
-        flag = 1;
+      seleciona = atoi(entrada);
+      if(mode == 1) {
+        if(seleciona < 1 || seleciona > 3) {
+          vermelho();
+          printf("Valor invalido, digite novamente: ");
+          padrao();
+          flag = 1;
+        }
+      }
+      else {
+        if(seleciona != 1 && seleciona != 2) {
+          vermelho();
+          printf("Valor invalido, digite novamente: ");
+          padrao();
+          flag = 1;
+        }
       }
     }
-  } while(flag == 1);
+  } while((is_alpha(entrada) == 1) || flag == 1);
   
+  free(entrada);  
+
   return seleciona;
 }
 

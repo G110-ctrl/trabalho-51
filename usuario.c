@@ -47,32 +47,32 @@ void imprimir_disponivel(char *disponivel, int quant) {
     switch(disponivel[i + 1]) {
       case '1': 
         verde();
-        printf("%c%c ", disponivel[i], disponivel[i+1]);
+        printf("%c%c ", disponivel[i], disponivel[i + 1]);
         padrao();
         break;
       case '2': 
         vermelho();
-        printf("%c%c ", disponivel[i], disponivel[i+1]);
+        printf("%c%c ", disponivel[i], disponivel[i + 1]);
         padrao();
         break;
       case '3': 
         amarelo();
-        printf("%c%c ", disponivel[i], disponivel[i+1]);
+        printf("%c%c ", disponivel[i], disponivel[i + 1]);
         padrao();
         break;
       case '4': 
         azul();
-        printf("%c%c ", disponivel[i], disponivel[i+1]);
+        printf("%c%c ", disponivel[i], disponivel[i + 1]);
         padrao();
         break; 
       case '5': 
         roxo();
-        printf("%c%c ", disponivel[i], disponivel[i+1]);
+        printf("%c%c ", disponivel[i], disponivel[i + 1]);
         padrao();
         break; 
       case '6': 
         marinho();
-        printf("%c%c ", disponivel[i], disponivel[i+1]);
+        printf("%c%c ", disponivel[i], disponivel[i + 1]);
         padrao();
         break;      
     } 
