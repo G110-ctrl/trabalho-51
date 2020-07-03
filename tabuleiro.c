@@ -88,13 +88,13 @@ int opcoes(int mode) {
   entrada = (char *) malloc(sizeof(char) * 100);
   if(entrada == NULL) {
     vermelho();
-    printf("Não foi possivel alocar memoria\n");
+    printf("Nao foi possivel alocar memoria\n");
     padrao();
     exit(1);
   }
  
   verde();
-  printf("Opções:\n");
+  printf("Opcoes:\n");
   padrao();
   printf("1 - Jogar |");
   
@@ -152,7 +152,7 @@ void cheat_mode(char **pecas, char *disponivel, int quant_disponivel) {
   int i, j;
 
   verde();
-  printf("Qual peça deseja trocar: ");
+  printf("Qual peca deseja trocar: ");
   padrao();
   do {
     setbuf(stdin, NULL);  
@@ -166,12 +166,12 @@ void cheat_mode(char **pecas, char *disponivel, int quant_disponivel) {
     }
     if(!existe) {
       vermelho();
-      printf("A peça que deseja trocar não existe, escolha novamente: ");
+      printf("A peca que deseja trocar nao existe. Escolha novamente: ");
       padrao();
     }
   } while(!existe);
 
-  // Sortei de uma nova peça
+  // Sorteio de uma nova peça
 
   int linha;
   int coluna;
@@ -199,20 +199,29 @@ void cheat_mode(char **pecas, char *disponivel, int quant_disponivel) {
   return;
 }
 
-void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogadores, int num_jog, int mode) {
+void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog, int mode) {
 
   int linha = 1;
   int linha_superior = 0;
   int coluna = 2;
   int coluna_esquerda = 0;
   int i, j;         // Contadores 
+  char *disponivel;
+
+  disponivel = (char *) malloc(sizeof(char) * 12);
+  if(disponivel == NULL) {
+    vermelho();
+    printf("Nao foi possivel alocar memoria!");
+    padrao();
+    exit(1);
+  }
 
   // Aloca a primeiro linha e as duas colunas iniciais 
   tabuleiro = NULL;
   tabuleiro = (char **) realloc(tabuleiro, sizeof(char *) * linha);
   if(tabuleiro == NULL) {
     vermelho();
-    printf("Não foi possivel adicinar linhas no tabuleiro\n");
+    printf("Nao foi possivel adicinar linhas no tabuleiro\n");
     padrao();
     exit(1);
   }
@@ -220,7 +229,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
   tabuleiro[0] = (char *) realloc(tabuleiro[0], sizeof(char) * coluna);   // Duas colunas (1 peça)
   if(tabuleiro[0] == NULL) {
     vermelho();
-    printf("Não foi possivel adicinar colunas no tabuleiro\n");
+    printf("Nao foi possivel adicinar colunas no tabuleiro\n");
     padrao();
     exit(1);
   }
@@ -316,7 +325,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
 
         if(tabuleiro[i][j] != ' ') {
           vermelho();
-          printf("Posição já preenchida, insira novamente\n");
+          printf("Posicao ja preenchida, insira novamente\n");
           padrao();
         }
       } while(tabuleiro[i][j] != ' ');
@@ -368,7 +377,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
         tabuleiro = (char **) realloc(tabuleiro, sizeof(char *) * linha);
         if(tabuleiro == NULL) {
           vermelho();
-          printf("Não foi possivel adicinar linhas no tabuleiro\n");
+          printf("Nao foi possivel adicinar linhas no tabuleiro\n");
           padrao();
           exit(1);
         }
@@ -376,7 +385,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
         tabuleiro[linha - 1] = (char *) realloc(tabuleiro[linha - 1], sizeof(char ) * coluna);
         if(tabuleiro[linha - 1] == NULL) {
           vermelho();
-          printf("Não foi possivel adicinar colunas no tabuleiro\n");
+          printf("Nao foi possivel adicinar colunas no tabuleiro\n");
           padrao();
           exit(1);
         }
@@ -415,14 +424,14 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
         tabuleiro = (char **) realloc(tabuleiro, sizeof(char *) * linha);   // adicinar uma linha
         if(tabuleiro == NULL) {
           vermelho();
-          printf("Não foi possivel adicinar linhas no tabuleiro\n");
+          printf("Nao foi possivel adicinar linhas no tabuleiro\n");
           padrao();
           exit(1);
         }
         tabuleiro[linha - 1] = (char *) realloc(tabuleiro[linha - 1], sizeof(char ) * coluna);  // Aloca as colunas na nova linha alocada 
         if(tabuleiro[linha - 1] == NULL) {
           vermelho();
-          printf("Não foi possivel adicinar colunas no tabuleiro\n");
+          printf("Nao foi possivel adicinar colunas no tabuleiro\n");
           padrao();
           exit(1);
         }
@@ -450,7 +459,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
           tabuleiro[i] = (char *) realloc(tabuleiro[i], sizeof(char ) * coluna);
           if(tabuleiro[i] == NULL) {
             vermelho();
-            printf("Não foi possivel adicinar colunas no tabuleiro\n");
+            printf("Nao foi possivel adicinar colunas no tabuleiro\n");
             padrao();
             exit(1);
           }
@@ -487,7 +496,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
           tabuleiro[i] = (char *) realloc(tabuleiro[i], sizeof(char) * coluna);
           if(tabuleiro[i] == NULL) {
             vermelho();
-            printf("Não foi possivel adicionar novas colunas no tabuleiro\n");
+            printf("Nao foi possivel adicionar novas colunas no tabuleiro\n");
             padrao();
             exit(1);
           }
@@ -502,7 +511,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
 
       if(quant_disponivel == 0) {
         vermelho();
-        printf("Não existem mais peças disponiveis !!\n");
+        printf("Nao existem mais pecas disponiveis !!\n");
         padrao();
       }
     } while(quant_disponivel > 0);
@@ -510,6 +519,8 @@ void quadro_pecas(char **pecas, char **tabuleiro, char *disponivel, char **jogad
     quant_jog++; // proximo jogador
     
   } while(quant_pecas > 0);
+
+  free(disponivel);
 
   return;
 }

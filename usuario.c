@@ -118,7 +118,6 @@ void usuario(void) {
   char **jogadores;
   char **tabuleiro;
   char **pecas;
-  char *disponivel;
 
   quant_jog = (char *) malloc(sizeof(char) * 100);
   if(quant_jog == NULL) {
@@ -214,28 +213,38 @@ void usuario(void) {
   printf("Confirmacao: ");
   padrao();
 
+  char *seleciona;
   int mode;
-  do {
-    scanf("%d", &mode);
-    if(mode != 1 && mode != 2) {
-      vermelho();
-      printf("Valor invalido, digite novamente: ");
-      padrao();      
-    }
-  } while(mode != 1 && mode != 2);
-
-  disponivel = (char *) malloc(sizeof(char) * 12);
-  if(disponivel == NULL) {
+  seleciona = (char *) malloc(sizeof(char) * 100);
+  if(seleciona == NULL) {
     vermelho();
-    printf("Nao foi possivel alocar memoria!");
+    printf("Não foi possivel alocar memoria\n");
     padrao();
     exit(1);
   }
 
+  do {
+    scanf("%s", seleciona);    
+    if(is_alpha(seleciona) == 1) {
+      vermelho();
+      printf("Digite o valor correto: ");
+      padrao();      
+    }
+    else {
+      mode = atoi(seleciona);
+      if(mode != 1 && mode != 2) {
+        vermelho();
+        printf("Valor invalido, digite novamente: ");
+        padrao(); 
+      }
+    }
+  } while(is_alpha(seleciona) == 1 || (mode != 1 && mode != 2));
+
+  free(seleciona);
+
   preenche(pecas);  // preenche a matriz com a peças do jogo
-  quadro_pecas(pecas, tabuleiro, disponivel, jogadores, num_jog, mode);
+  quadro_pecas(pecas, tabuleiro, jogadores, num_jog, mode);
   
-  free(disponivel);
   for(int i = 0; i < num_jog; i++) {
     free(jogadores[i]);
   }
