@@ -107,7 +107,7 @@ int opcoes(int mode) {
   }
 
   verde();
-  printf("Qual a opção desejada: ");
+  printf("Qual a opcao desejada: ");
   padrao();
 
   do {
@@ -205,6 +205,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
   int linha_superior = 0;
   int coluna = 2;
   int coluna_esquerda = 0;
+  int lim = 1;
   int i, j;         // Contadores 
   char *disponivel;
 
@@ -257,7 +258,10 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
     quant_disponivel = 12;
     do {
       printf("------------------------\n");
-      printf("jogada de %s\n", jogadores[quant_jog]);
+      verde();
+      printf("Jogada de ");
+      amarelo();
+      printf("%s\n", jogadores[quant_jog]);
       negrito();
       printf("Pecas disponiveis: ");
       padrao();
@@ -270,7 +274,8 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
           cheat_mode(pecas, disponivel, quant_disponivel);
           imprimir_tabuleiro(tabuleiro, linha, coluna, linha_superior, coluna_esquerda);
           printf("------------------------\n");
-          printf("jogada de %s\n", jogadores[quant_jog]);        
+          vermelho();
+          printf("Jogada de %s\n", jogadores[quant_jog]);        
           negrito();
           printf("Pecas disponiveis: ");
           padrao();
@@ -288,7 +293,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
 
       existe = 0;
       negrito();
-      printf("Escolha a peça desejada: ");
+      printf("Escolha a peca desejada: ");
       padrao();
 
       do {    // Verifica se a peça selecionada pelo usuario existe
@@ -307,11 +312,44 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
         }
       } while(!existe);
       
+      //printf("coluna_esquerda = %d\n", coluna_esquerda);
+      //printf("linha = %d\n", linha);
+      //printf("Colunas = %d\n", coluna);
+      //printf("LIMITE = %d\n", lim);
       do {
         negrito();
         printf("Linha que deseja jogar: ");
         padrao();
-        scanf("%d", &pos1);
+        
+        char *pos_aux;
+        pos_aux = (char *) malloc(sizeof(char) * 100);
+        if(pos_aux == NULL) {
+          vermelho();
+          printf("Não foi possivel alocar memoria\n");
+          padrao();
+          exit(1);
+        }
+
+        do {
+          existe = 0;
+          fgets(pos_aux, 100, stdin);
+          if(is_alpha(pos_aux) == 1) {
+            vermelho();
+            printf("Digite um numero: ");
+            padrao();
+            existe = 1;
+          }
+          else {
+            pos1 = atoi(pos_aux);
+            if(pos1 < coluna_esquerda || pos1 >= lim) {
+              vermelho();
+              printf("Posição invalida, digite novamente: ");
+              padrao();
+              existe = 1;
+            }
+          }          
+        } while(existe);
+        
         negrito();
         printf("Coluna que deseja jogar: ");
         padrao();
@@ -371,7 +409,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
           break;
         }
       }
-    
+      
       if(flag) {
         linha += 1;     // Aumenta a quantidade de linhas 
         tabuleiro = (char **) realloc(tabuleiro, sizeof(char *) * linha);
@@ -419,6 +457,8 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
           break;
         }
       }
+
+      lim = linha + coluna_esquerda; // limita os valores das linhas que podem ser inseridos pelo usuario
 
       if(flag) {
         tabuleiro = (char **) realloc(tabuleiro, sizeof(char *) * linha);   // adicinar uma linha
