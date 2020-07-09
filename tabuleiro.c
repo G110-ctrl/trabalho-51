@@ -205,7 +205,6 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
   int linha_superior = 0;
   int coluna = 2;
   int coluna_esquerda = 0;
-  int lim = 1;
   int i, j;         // Contadores 
   char *disponivel;
 
@@ -244,6 +243,9 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
   int quant_disponivel = 12; // Peças disponiveis para os jogadores em cada rodada
   int quant_jog = 0;      // Quantidade de jogadores
   int quant_pecas = 108;  // Quantidade total de peças
+  int lim_linha = 1;  // Quantidade de linhas que o usuario pode escolher 
+  int lim_coluna = 1; // Quantidade de colunas que o usuario pode escolher 
+
   int seleciona = 0;
   int flag = 0;
   
@@ -312,10 +314,6 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
         }
       } while(!existe);
       
-      //printf("coluna_esquerda = %d\n", coluna_esquerda);
-      //printf("linha = %d\n", linha);
-      //printf("Colunas = %d\n", coluna);
-      //printf("LIMITE = %d\n", lim);
       do {
         negrito();
         printf("Linha que deseja jogar: ");
@@ -341,20 +339,45 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
           }
           else {
             pos1 = atoi(pos_aux);
-            if(pos1 < coluna_esquerda || pos1 >= lim) {
+            if(pos1 < coluna_esquerda || pos1 >= lim_linha) {
               vermelho();
-              printf("Posição invalida, digite novamente: ");
+              printf("Linha invalida, digite novamente: ");
               padrao();
               existe = 1;
             }
           }          
         } while(existe);
         
+        printf("\nlinha_superior = %d\n", linha_superior);
+        //printf("linha = %d\n", linha);
+        printf("Colunas = %d\n", coluna);
+        printf("LIMITE = %d\n", lim_coluna);
+        //printf("aux_limite = %d\n", aux_limita);
+
         negrito();
         printf("Coluna que deseja jogar: ");
         padrao();
-        scanf("%d", &pos2);
-
+        do {
+          existe = 0;
+          scanf("%s", pos_aux);
+          if(is_alpha(pos_aux) == 1) {
+            vermelho();
+            printf("Digite um numero: ");
+            padrao();
+            existe = 1;
+          }
+          else {
+            pos2 = atoi(pos_aux);
+            if(pos2 < linha_superior || pos2 >= lim_coluna) {
+              vermelho();
+              printf("Coluna invalida, digite novamente: ");
+              padrao();
+              existe = 1;
+            }
+          }
+        } while(existe);
+        
+        free(pos_aux);
         // Relaciona as posições impressas com as posições da matrzi tabuleiro
 
         i = ref_linha + pos1;
@@ -458,7 +481,7 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
         }
       }
 
-      lim = linha + coluna_esquerda; // limita os valores das linhas que podem ser inseridos pelo usuario
+      lim_linha = linha + coluna_esquerda; // limita os valores das linhas que podem ser inseridos pelo usuario
 
       if(flag) {
         tabuleiro = (char **) realloc(tabuleiro, sizeof(char *) * linha);   // adicinar uma linha
@@ -526,11 +549,13 @@ void quadro_pecas(char **pecas, char **tabuleiro, char **jogadores, int num_jog,
       flag = 0;
       for(i = 0; i < linha; i++) {
         if(tabuleiro[i][coluna - 1] != ' ') {
-          coluna += 2;    // Adicina mais duas colunas (Armazena mais uma peça)
+          coluna += 2; // Adicina mais duas colunas (Armazena mais uma peça) 
+          lim_coluna++;
           flag = 1;
           break;
         }
       }
+      
       if(flag) {
         for(i = 0; i < linha; i++) {
           tabuleiro[i] = (char *) realloc(tabuleiro[i], sizeof(char) * coluna);
